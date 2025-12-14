@@ -1,12 +1,12 @@
 import { faker } from '@faker-js/faker'
 import bcrypt from 'bcrypt'
 import { InMemoryUsersRepository } from '../../src/infrastructure/repository/inMemory/in-memory-users-repository'
-import { RegisterUseCase } from '../../src/application/usecase/register'
+import { SignupUseCase } from '../../src/application/usecase/sign-up'
 import { UserAlreadyExists } from '../../src/shared/utils/errors'
 
-describe('RegisterUseCase', () => {
+describe('SignupUseCase', () => {
   let usersRepository: InMemoryUsersRepository
-  let registerUseCase: RegisterUseCase
+  let signUpUseCase: SignupUseCase
 
   const makeUserData = (
     overrides: { email?: string; name?: string; password?: string } = {}
@@ -26,13 +26,13 @@ describe('RegisterUseCase', () => {
 
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository()
-    registerUseCase = new RegisterUseCase(usersRepository)
+    signUpUseCase = new SignupUseCase(usersRepository)
   })
 
-  it('should register a new user successfully', async () => {
+  it('should sign up a new user successfully', async () => {
     const userData = makeUserData()
 
-    const result = await registerUseCase.execute(userData)
+    const result = await signUpUseCase.execute(userData)
 
     expect(result).toBeDefined()
     expect(result.id).toBeDefined()
@@ -43,19 +43,19 @@ describe('RegisterUseCase', () => {
     expect(typeof result.id).toBe('string')
   })
 
-  it('should not register a user with an existing email', async () => {
+  it('should not sign up a user with an existing email', async () => {
     const userData = makeUserData()
-    await registerUseCase.execute(userData)
+    await signUpUseCase.execute(userData)
 
-    await expect(registerUseCase.execute(userData)).rejects.toBeInstanceOf(
+    await expect(signUpUseCase.execute(userData)).rejects.toBeInstanceOf(
       UserAlreadyExists
     )
   })
 
-  it('should hash user password upon registration', async () => {
+  it('should hash user password upon sign up', async () => {
     const userData = makeUserData()
 
-    await registerUseCase.execute(userData)
+    await signUpUseCase.execute(userData)
     const storedUser = await usersRepository.findByEmail(userData.email)
 
     expect(storedUser).toBeDefined()
@@ -70,7 +70,7 @@ describe('RegisterUseCase', () => {
   it('should throw ValidationError for invalid email', async () => {
     const userData = makeUserData({ email: 'invalid-email' })
 
-    await expect(registerUseCase.execute(userData)).rejects.toThrow(
+    await expect(signUpUseCase.execute(userData)).rejects.toThrow(
       'Please provide a valid e-mail'
     )
   })
@@ -78,7 +78,7 @@ describe('RegisterUseCase', () => {
   it('should throw ValidationError for empty name', async () => {
     const userData = makeUserData({ name: '' })
 
-    await expect(registerUseCase.execute(userData)).rejects.toThrow(
+    await expect(signUpUseCase.execute(userData)).rejects.toThrow(
       'Name is required'
     )
   })
@@ -86,7 +86,7 @@ describe('RegisterUseCase', () => {
   it('should throw ValidationError for short password', async () => {
     const userData = makeUserData({ password: '123' })
 
-    await expect(registerUseCase.execute(userData)).rejects.toThrow(
+    await expect(signUpUseCase.execute(userData)).rejects.toThrow(
       'Password must have at least 6 characters'
     )
   })

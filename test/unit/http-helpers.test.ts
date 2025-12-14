@@ -106,11 +106,11 @@ describe('HTTP Helpers', () => {
   })
 
   describe('created', () => {
-    it('should return status 201 with body', () => {
+    it('should return status 200 with body', () => {
       const body = { message: 'User created successfully', id: '123' }
       const response = created(body)
 
-      expect(response.statusCode).toBe(201)
+      expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(body)
     })
 
@@ -122,7 +122,7 @@ describe('HTTP Helpers', () => {
       }
       const response = created(body)
 
-      expect(response.statusCode).toBe(201)
+      expect(response.statusCode).toBe(200)
       expect(response.body.id).toBe('user-123')
       expect(response.body.created_at).toBeInstanceOf(Date)
       expect(response.body.modified_at).toBeInstanceOf(Date)

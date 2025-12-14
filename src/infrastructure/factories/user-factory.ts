@@ -1,20 +1,20 @@
 import { SequelizeUsersRepository } from '../repository/sequelize/sequelize-users-repository'
-import { RegisterUseCase } from '../../application/usecase/register'
-import { CreateUserController } from '../../application/controller/register'
+import { SignupUseCase } from '../../application/usecase/sign-up'
+import { SignupController } from '../../application/controller/sign-up'
 import { AuthenticateUseCase } from '../../application/usecase/authenticate'
 import { AuthenticateUserController } from '../../application/controller/authenticate'
 import { GetUserByIdUseCase } from '../../application/usecase/get-user-by-id'
 import { GetUserByIdController } from '../../application/controller/get-user-by-id-controller'
 import { JwtAdapterImpl } from '../../domain/JwtAdapter'
 
-export const makeRegisterUserController = () => {
+export const makeSignupUserController = () => {
   const usersRepository = new SequelizeUsersRepository()
 
-  const registerUserUseCase = new RegisterUseCase(usersRepository)
+  const signupUserUseCase = new SignupUseCase(usersRepository)
 
-  const createUserController = new CreateUserController(registerUserUseCase)
+  const signupUserController = new SignupController(signupUserUseCase)
 
-  return createUserController
+  return signupUserController
 }
 
 export const makeAuthenticateUserController = () => {
@@ -37,6 +37,6 @@ export const makeGetUserByIdController = () => {
   const usersRepository = new SequelizeUsersRepository()
   const getUserByIdUseCase = new GetUserByIdUseCase(usersRepository)
   const getUserByIdController = new GetUserByIdController(getUserByIdUseCase)
-  
+
   return getUserByIdController
 }

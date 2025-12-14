@@ -1,5 +1,5 @@
 export {
-  makeRegisterUserController,
+  makeSignupUserController,
   makeAuthenticateUserController,
   makeGetUserByIdController,
 } from './user-factory'

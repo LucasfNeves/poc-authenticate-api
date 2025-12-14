@@ -24,9 +24,11 @@ app.use((req, _res, next) => {
   next()
 })
 
+app.get('/', (req, res) => res.status(200).json({ status: 'API is healthy' }))
+
 const swaggerPath = path.resolve(__dirname, '../docs/swagger.json')
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf-8'))
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use('/api', router)
 logger.info('Rotas registradas em /api')

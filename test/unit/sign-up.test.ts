@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals'
-import { CreateUserController } from '../../src/application/controller/register'
+import { SignupController } from '../../src/application/controller/sign-up'
 import {
   UserAlreadyExists,
   ValidationError,
 } from '../../src/shared/utils/errors'
 
-type RegisterUseCaseExecute = (params: {
+type SignUpUseCaseExecute = (params: {
   email: string
   name: string
   password: string
@@ -13,24 +13,24 @@ type RegisterUseCaseExecute = (params: {
 }) => Promise<{ id: string; created_at: string; modified_at: string }>
 
 describe('CreateUserController', () => {
-  let registerUseCaseMock: {
-    execute: jest.MockedFunction<RegisterUseCaseExecute>
+  let signUpUseCaseMock: {
+    execute: jest.MockedFunction<SignUpUseCaseExecute>
   }
-  let controller: CreateUserController
+  let controller: SignupController
 
   beforeEach(() => {
     const now = new Date().toISOString()
-    registerUseCaseMock = {
-      execute: jest.fn<RegisterUseCaseExecute>().mockResolvedValue({
+    signUpUseCaseMock = {
+      execute: jest.fn<SignUpUseCaseExecute>().mockResolvedValue({
         id: 'user-id-123',
         created_at: now,
         modified_at: now,
       }),
     }
-    controller = new CreateUserController(registerUseCaseMock)
+    controller = new SignupController(signUpUseCaseMock)
   })
 
-  it('should return 201 with user data when user is created successfully', async () => {
+  it('should return 200 with user data when user is created successfully', async () => {
     const response = await controller.handle({
       body: {
         name: 'John Doe',
@@ -40,11 +40,11 @@ describe('CreateUserController', () => {
       },
     })
 
-    expect(response.statusCode).toBe(201)
+    expect(response.statusCode).toBe(200)
     expect(response.body.id).toBe('user-id-123')
     expect(typeof response.body.created_at).toBe('string')
     expect(typeof response.body.modified_at).toBe('string')
-    expect(registerUseCaseMock.execute).toHaveBeenCalledTimes(1)
+    expect(signUpUseCaseMock.execute).toHaveBeenCalledTimes(1)
   })
 
   it('should call use case with correct value objects including telephones', async () => {
@@ -60,7 +60,7 @@ describe('CreateUserController', () => {
       },
     })
 
-    expect(registerUseCaseMock.execute).toHaveBeenCalledWith({
+    expect(signUpUseCaseMock.execute).toHaveBeenCalledWith({
       email: 'john@example.com',
       name: 'John Doe',
       password: 'password123',
@@ -72,7 +72,7 @@ describe('CreateUserController', () => {
   })
 
   it('should return 409 when user already exists', async () => {
-    registerUseCaseMock.execute.mockRejectedValueOnce(new UserAlreadyExists())
+    signUpUseCaseMock.execute.mockRejectedValueOnce(new UserAlreadyExists())
 
     const response = await controller.handle({
       body: {
@@ -88,7 +88,7 @@ describe('CreateUserController', () => {
   })
 
   it('should return 400 when validation fails', async () => {
-    registerUseCaseMock.execute.mockRejectedValueOnce(
+    signUpUseCaseMock.execute.mockRejectedValueOnce(
       new ValidationError('Name is required')
     )
 
@@ -106,7 +106,7 @@ describe('CreateUserController', () => {
   })
 
   it('should return 400 when telephones array is empty', async () => {
-    registerUseCaseMock.execute.mockRejectedValueOnce(
+    signUpUseCaseMock.execute.mockRejectedValueOnce(
       new ValidationError('At least one telephone is required')
     )
 
@@ -124,7 +124,7 @@ describe('CreateUserController', () => {
   })
 
   it('should return 400 when value object throws error', async () => {
-    registerUseCaseMock.execute.mockRejectedValueOnce(
+    signUpUseCaseMock.execute.mockRejectedValueOnce(
       new ValidationError('Name must have at least 2 characters')
     )
 
@@ -142,9 +142,7 @@ describe('CreateUserController', () => {
   })
 
   it('should return 400 when generic error occurs in use case', async () => {
-    registerUseCaseMock.execute.mockRejectedValueOnce(
-      new Error('Database error')
-    )
+    signUpUseCaseMock.execute.mockRejectedValueOnce(new Error('Database error'))
 
     const response = await controller.handle({
       body: {
@@ -160,7 +158,7 @@ describe('CreateUserController', () => {
   })
 
   it('should return 500 when unknown error occurs', async () => {
-    registerUseCaseMock.execute.mockRejectedValueOnce('Unknown error')
+    signUpUseCaseMock.execute.mockRejectedValueOnce('Unknown error')
 
     const response = await controller.handle({
       body: {

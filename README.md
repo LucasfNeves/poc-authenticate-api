@@ -174,7 +174,7 @@ test/
 #### Registrar Novo Usuário
 
 ```http
-POST /api/auth/register
+POST /api/auth/sign-up
 Content-Type: application/json
 
 {

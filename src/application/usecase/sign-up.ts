@@ -15,25 +15,25 @@ interface UserJSON {
   updated_at: string
 }
 
-interface RegisterUserUseCaseParams {
+interface SignupUserUseCaseParams {
   email: string
   name: string
   password: string
   telephones: TelephoneType[]
 }
 
-interface RegisterUseCaseResponse {
+interface SignupUseCaseResponse {
   id: string
   created_at: string
   modified_at: string
 }
 
-export class RegisterUseCase {
+export class SignupUseCase {
   constructor(private usersRepository: UsersRepository) {}
 
   async execute(
-    params: RegisterUserUseCaseParams
-  ): Promise<RegisterUseCaseResponse> {
+    params: SignupUserUseCaseParams
+  ): Promise<SignupUseCaseResponse> {
     const { name, email, password, telephones } = params
 
     const emailVO = Email.create(email)

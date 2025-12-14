@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/api/auth/register": {
+    "/api/auth/sign-up": {
       "post": {
         "summary": "Registrar novo usuário",
         "description": "Cria uma nova conta de usuário",
@@ -21,7 +21,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/SignupRequest"
               }
             }
           }
@@ -32,7 +32,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegisterResponse"
+                  "$ref": "#/components/schemas/SignupResponse"
                 }
               }
             }
@@ -161,7 +161,7 @@
       }
     },
     "schemas": {
-      "RegisterRequest": {
+      "SignupRequest": {
         "type": "object",
         "required": ["name", "email", "password", "telephones"],
         "properties": {
@@ -187,7 +187,7 @@
           }
         }
       },
-      "RegisterResponse": {
+      "SignupResponse": {
         "type": "object",
         "properties": {
           "id": {

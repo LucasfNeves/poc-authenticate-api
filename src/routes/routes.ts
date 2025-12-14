@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { routeAdapter } from '../infrastructure/http/adapters/route-adapter'
 import { middlewareAdapter } from '../infrastructure/http/adapters/middleware-adapter'
 import {
-  makeRegisterUserController,
+  makeSignupUserController,
   makeAuthenticateUserController,
   makeGetUserByIdController,
 } from '../infrastructure/factories'
@@ -10,11 +10,7 @@ import { makeAuthenticationMiddleware } from '../infrastructure/factories/middle
 
 export const router = Router()
 
-router.get('/', (_req, res) =>
-  res.status(200).json({ status: 'API is healthy' })
-)
-
-router.post('/auth/register', routeAdapter(makeRegisterUserController()))
+router.post('/auth/sign-up', routeAdapter(makeSignupUserController()))
 router.post('/auth/login', routeAdapter(makeAuthenticateUserController()))
 router.get(
   '/user',
