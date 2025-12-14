@@ -1,15 +1,14 @@
 import { badRequest, conflict, created, serverError } from './helpers/http'
 import { UserAlreadyExists, ValidationError } from '../../shared/utils/errors'
 import { IController, IRequest, IResponse } from './interfaces/IController'
-import { Email, Name, Password, Telephone } from '../../domain/value-objects'
 import { RegisterRequestBody } from './types'
 
 interface RegisterUserUseCaseParams {
   execute: (params: {
-    email: Email
-    name: Name
-    password: Password
-    telephones: Telephone[]
+    email: string
+    name: string
+    password: string
+    telephones: Array<{ number: number; area_code: number }>
   }) => Promise<{ id: string; created_at: string; modified_at: string }>
 }
 
@@ -23,25 +22,19 @@ export class CreateUserController implements IController {
       const { email, name, password, telephones } =
         body as unknown as RegisterRequestBody
 
-      const emailVO = Email.create(email)
-      const nameVO = Name.create(name)
-      const passwordVO = Password.create(password)
-
-      const telephonesVO = Telephone.createMany(
-        !telephones
-          ? []
-          : telephones.map((tel) => ({
-              number: Number(tel.number),
-              area_code: Number(tel.area_code),
-            }))
-      )
+      const telephonesData = !telephones
+        ? []
+        : telephones.map((tel) => ({
+            number: Number(tel.number),
+            area_code: Number(tel.area_code),
+          }))
 
       const { id, created_at, modified_at } =
         await this.registerUserUseCase.execute({
-          email: emailVO,
-          name: nameVO,
-          password: passwordVO,
-          telephones: telephonesVO,
+          email,
+          name,
+          password,
+          telephones: telephonesData,
         })
 
       return created({ id, created_at, modified_at })

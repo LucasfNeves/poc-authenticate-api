@@ -1,18 +1,15 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals'
 import { CreateUserController } from '../../src/application/controller/register'
-import { UserAlreadyExists } from '../../src/shared/utils/errors'
 import {
-  Email,
-  Name,
-  Password,
-  Telephone,
-} from '../../src/domain/value-objects'
+  UserAlreadyExists,
+  ValidationError,
+} from '../../src/shared/utils/errors'
 
 type RegisterUseCaseExecute = (params: {
-  email: Email
-  name: Name
-  password: Password
-  telephones: Telephone[]
+  email: string
+  name: string
+  password: string
+  telephones: Array<{ number: number; area_code: number }>
 }) => Promise<{ id: string; created_at: string; modified_at: string }>
 
 describe('CreateUserController', () => {
@@ -64,18 +61,14 @@ describe('CreateUserController', () => {
     })
 
     expect(registerUseCaseMock.execute).toHaveBeenCalledWith({
-      email: expect.any(Email),
-      name: expect.any(Name),
-      password: expect.any(Password),
-      telephones: expect.any(Array),
+      email: 'john@example.com',
+      name: 'John Doe',
+      password: 'password123',
+      telephones: [
+        { number: 987654321, area_code: 11 },
+        { number: 12345678, area_code: 21 },
+      ],
     })
-
-    const calledWith = registerUseCaseMock.execute.mock.calls[0]?.[0]
-    expect(calledWith?.email.getValue()).toBe('john@example.com')
-    expect(calledWith?.name.getValue()).toBe('John Doe')
-    expect(calledWith?.password.getValue()).toBe('password123')
-    expect(calledWith?.telephones).toHaveLength(2)
-    expect(calledWith?.telephones[0]).toBeInstanceOf(Telephone)
   })
 
   it('should return 409 when user already exists', async () => {
@@ -95,6 +88,10 @@ describe('CreateUserController', () => {
   })
 
   it('should return 400 when validation fails', async () => {
+    registerUseCaseMock.execute.mockRejectedValueOnce(
+      new ValidationError('Name is required')
+    )
+
     const response = await controller.handle({
       body: {
         name: '',
@@ -106,10 +103,13 @@ describe('CreateUserController', () => {
 
     expect(response.statusCode).toBe(400)
     expect(response.body.message).toBe('Name is required')
-    expect(registerUseCaseMock.execute).not.toHaveBeenCalled()
   })
 
   it('should return 400 when telephones array is empty', async () => {
+    registerUseCaseMock.execute.mockRejectedValueOnce(
+      new ValidationError('At least one telephone is required')
+    )
+
     const response = await controller.handle({
       body: {
         name: 'John Doe',
@@ -120,13 +120,14 @@ describe('CreateUserController', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    expect(response.body.message).toBe(
-      'At least one telephone is required'
-    )
-    expect(registerUseCaseMock.execute).not.toHaveBeenCalled()
+    expect(response.body.message).toBe('At least one telephone is required')
   })
 
   it('should return 400 when value object throws error', async () => {
+    registerUseCaseMock.execute.mockRejectedValueOnce(
+      new ValidationError('Name must have at least 2 characters')
+    )
+
     const response = await controller.handle({
       body: {
         name: 'J',
@@ -138,7 +139,6 @@ describe('CreateUserController', () => {
 
     expect(response.statusCode).toBe(400)
     expect(response.body.message).toContain('at least 2 characters')
-    expect(registerUseCaseMock.execute).not.toHaveBeenCalled()
   })
 
   it('should return 400 when generic error occurs in use case', async () => {

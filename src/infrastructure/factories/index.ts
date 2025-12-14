@@ -1,1 +1,4 @@
-export { makeRegisterUserController } from './user-factory'
+export {
+  makeRegisterUserController,
+  makeAuthenticateUserController,
+} from './user-factory'
