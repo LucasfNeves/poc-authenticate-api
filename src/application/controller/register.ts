@@ -1,9 +1,8 @@
-import { z } from 'zod'
 import { badRequest, conflict, created, serverError } from './helpers/http'
-import { UserAlreadyExists } from '../../shared/utils/errors'
+import { UserAlreadyExists, ValidationError } from '../../shared/utils/errors'
 import { IController, IRequest, IResponse } from './interfaces/IController'
-import { createUserSchema } from '../schemas/user-schema'
 import { Email, Name, Password, Telephone } from '../../domain/value-objects'
+import { RegisterRequestBody } from './types'
 
 interface RegisterUserUseCaseParams {
   execute: (params: {
@@ -22,13 +21,19 @@ export class CreateUserController implements IController {
   async handle({ body }: IRequest): Promise<IResponse> {
     try {
       const { email, name, password, telephones } =
-        await createUserSchema.parseAsync(body)
+        body as unknown as RegisterRequestBody
 
       const emailVO = Email.create(email)
       const nameVO = Name.create(name)
       const passwordVO = Password.create(password)
-      const telephonesVO = telephones.map((tel) =>
-        Telephone.create(tel.number, tel.area_code)
+
+      const telephonesVO = Telephone.createMany(
+        !telephones
+          ? []
+          : telephones.map((tel) => ({
+              number: Number(tel.number),
+              area_code: Number(tel.area_code),
+            }))
       )
 
       const { id, created_at, modified_at } =
@@ -41,15 +46,16 @@ export class CreateUserController implements IController {
 
       return created({ id, created_at, modified_at })
     } catch (error) {
-      if (error instanceof UserAlreadyExists) {
-        return conflict({
+      if (error instanceof ValidationError) {
+        return badRequest({
           message: error.message,
         })
       }
 
-      if (error instanceof z.ZodError) {
-        const errorMessage = error.issues[0].message
-        return badRequest({ errorMessage })
+      if (error instanceof UserAlreadyExists) {
+        return conflict({
+          message: error.message,
+        })
       }
 
       if (error instanceof Error) {
