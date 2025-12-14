@@ -11,7 +11,7 @@ interface RegisterUserUseCaseParams {
     name: Name
     password: Password
     telephones: Telephone[]
-  }) => Promise<{ id: string; created_at: Date; modified_at: Date }>
+  }) => Promise<{ id: string; created_at: string; modified_at: string }>
 }
 
 export class CreateUserController implements IController {

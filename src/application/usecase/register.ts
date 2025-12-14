@@ -4,6 +4,16 @@ import { BCRYPT_SALT_ROUNDS } from '../../config/constant'
 import { UsersRepository } from '../../infrastructure/repository/interfaces'
 import { Email, Name, Password, Telephone } from '../../domain/value-objects'
 
+interface UserJSON {
+  id: string
+  name: string
+  email: string
+  password: string
+  telephones: Array<{ area_code: number; number: number }>
+  created_at: string
+  updated_at: string
+}
+
 interface RegisterUserUseCaseParams {
   email: Email
   name: Name
@@ -13,8 +23,8 @@ interface RegisterUserUseCaseParams {
 
 interface RegisterUseCaseResponse {
   id: string
-  created_at: Date
-  modified_at: Date
+  created_at: string
+  modified_at: string
 }
 
 export class RegisterUseCase {
@@ -47,10 +57,12 @@ export class RegisterUseCase {
       telephones: telephonesData,
     })
 
+    const userJson = createdUser.toJSON() as UserJSON
+
     return {
       id: createdUser.id,
-      created_at: createdUser.createdAt,
-      modified_at: createdUser.updatedAt,
+      created_at: userJson.created_at,
+      modified_at: userJson.updated_at,
     }
   }
 }
