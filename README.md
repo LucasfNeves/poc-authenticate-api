@@ -82,16 +82,9 @@ npm run docker:exec
 # npm run migrate
 ```
 
-## Como Rodar o Projeto
-
-### Modo Desenvolvimento (Local)
+### 6. Execute o projeto
 
 ```bash
-# Com Docker
-npm run docker:up
-npm run docker:dev
-
-# Ou sem Docker (certifique-se de ter PostgreSQL rodando)
 npm run dev
 ```
 
