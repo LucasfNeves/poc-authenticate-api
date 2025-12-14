@@ -16,9 +16,9 @@
     "docker:dev": "docker exec -it docker-backend-1 npm run dev",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
-    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
-    "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "prepare": "husky"
   },
   "keywords": [
@@ -59,6 +59,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.0.1",
     "@types/swagger-ui-express": "4.1.8",
+    "cross-env": "10.1.0",
     "dotenv": "17.2.3",
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
