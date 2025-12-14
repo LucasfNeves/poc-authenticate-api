@@ -40,8 +40,10 @@ it('should register a new user successfully', async () => {
 
   expect(result).toBeDefined()
   expect(result.id).toBeDefined()
-  expect(result.created_at).toBeInstanceOf(Date)
-  expect(result.modified_at).toBeInstanceOf(Date)
+  expect(result.created_at).toBeDefined()
+  expect(typeof result.created_at).toBe('string')
+  expect(result.modified_at).toBeDefined()
+  expect(typeof result.modified_at).toBe('string')
   expect(typeof result.id).toBe('string')
 })
 

@@ -2,15 +2,7 @@ import winston from 'winston'
 
 const logFormat = winston.format.printf(
   ({ level, message, context, timestamp }) => {
-    const emoji =
-      {
-        info: '✅',
-        error: '❌',
-        warn: '⚠️',
-        debug: '🐛',
-      }[level] || 'ℹ️'
-
-    return `${timestamp} [${context}] ${emoji} ${message}`
+    return `${timestamp} [${context}] ${level.toUpperCase()} ${message}`
   }
 )
 

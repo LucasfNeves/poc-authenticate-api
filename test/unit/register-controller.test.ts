@@ -13,7 +13,7 @@ type RegisterUseCaseExecute = (params: {
   name: Name
   password: Password
   telephones: Telephone[]
-}) => Promise<{ id: string; created_at: Date; modified_at: Date }>
+}) => Promise<{ id: string; created_at: string; modified_at: string }>
 
 describe('CreateUserController', () => {
   let registerUseCaseMock: {
@@ -22,7 +22,7 @@ describe('CreateUserController', () => {
   let controller: CreateUserController
 
   beforeEach(() => {
-    const now = new Date()
+    const now = new Date().toISOString()
     registerUseCaseMock = {
       execute: jest.fn<RegisterUseCaseExecute>().mockResolvedValue({
         id: 'user-id-123',
@@ -45,8 +45,8 @@ describe('CreateUserController', () => {
 
     expect(response.statusCode).toBe(201)
     expect(response.body.id).toBe('user-id-123')
-    expect(response.body.created_at).toBeInstanceOf(Date)
-    expect(response.body.modified_at).toBeInstanceOf(Date)
+    expect(typeof response.body.created_at).toBe('string')
+    expect(typeof response.body.modified_at).toBe('string')
     expect(registerUseCaseMock.execute).toHaveBeenCalledTimes(1)
   })
 

@@ -15,14 +15,24 @@ export class InMemoryUsersRepository implements UsersRepository {
   }
 
   async create(data: UserCreationInput): Promise<User> {
+    const now = new Date()
     const user = {
       id: randomUUID(),
       name: data.name,
       email: data.email,
       password: data.password,
       telephones: data.telephones || [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: now,
+      updatedAt: now,
+      toJSON: () => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        telephones: user.telephones,
+        created_at: now.toISOString(),
+        updated_at: now.toISOString(),
+      }),
     } as User
 
     this.items.push(user)
