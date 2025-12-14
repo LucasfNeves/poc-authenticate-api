@@ -1,3 +1,5 @@
+import { ValidationError } from '../../shared/utils/errors'
+
 export class Name {
   private readonly value: string
 
@@ -6,14 +8,18 @@ export class Name {
   }
 
   static create(name: string): Name {
+    if (!name) {
+      throw new ValidationError('Name is required')
+    }
+
     const trimmedName = name.trim()
 
     if (!trimmedName) {
-      throw new Error('Name is required')
+      throw new ValidationError('Name is required')
     }
 
     if (trimmedName.length < 2) {
-      throw new Error('Name must have at least 2 characters')
+      throw new ValidationError('Name must have at least 2 characters')
     }
 
     return new Name(trimmedName)
