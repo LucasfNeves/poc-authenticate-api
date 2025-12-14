@@ -17,22 +17,18 @@ const __dirname = path.dirname(__filename)
 const logger = new Logger('Server')
 const app = express()
 
-// Middlewares
 app.use(express.json())
 app.use(cors())
 
-// Debug middleware
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`)
   next()
 })
 
-// Swagger
 const swaggerPath = path.resolve(__dirname, '../docs/swagger.json')
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf-8'))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
-// Rotas - ANTES do bootstrap
 app.use('/api', router)
 logger.info('Rotas registradas em /api')
 
