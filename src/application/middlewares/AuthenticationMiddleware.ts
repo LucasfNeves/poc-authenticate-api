@@ -53,9 +53,7 @@ export class AuthenticationMiddleware implements IMiddleware {
           email: sub.email,
         },
       }
-    } catch (error) {
-      console.error(error)
-
+    } catch {
       return {
         statusCode: 401,
         body: { error: 'Unauthorized' },
