@@ -40,7 +40,7 @@ async function bootstrap() {
     await sequelize.authenticate()
     logger.info('Conexão com banco de dados estabelecida')
 
-    await sequelize.sync({ alter: false })
+    await sequelize.sync({ alter: true })
     logger.info('Models sincronizados')
 
     app.listen(port, () => {

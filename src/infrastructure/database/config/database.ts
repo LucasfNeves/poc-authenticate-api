@@ -17,6 +17,15 @@ const sequelize = new Sequelize({
     createdAt: 'created_at',
     updatedAt: 'updated_at',
   },
+  dialectOptions:
+    process.env.NODE_ENV === 'production'
+      ? {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        }
+      : {},
 })
 
 export default sequelize
