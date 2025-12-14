@@ -3,13 +3,14 @@ import { UserAlreadyExists } from '../../shared/utils/errors'
 import { BCRYPT_SALT_ROUNDS } from '../../config/constant'
 import { UsersRepository } from '../../infrastructure/repository/interfaces'
 import { Email, Name, Password, Telephone } from '../../domain/value-objects'
+import { TelephoneType } from '../../shared/utils/types'
 
 interface UserJSON {
   id: string
   name: string
   email: string
   password: string
-  telephones: Array<{ area_code: number; number: number }>
+  telephones: TelephoneType[]
   created_at: string
   updated_at: string
 }
@@ -18,7 +19,7 @@ interface RegisterUserUseCaseParams {
   email: string
   name: string
   password: string
-  telephones: Array<{ number: number; area_code: number }>
+  telephones: TelephoneType[]
 }
 
 interface RegisterUseCaseResponse {
