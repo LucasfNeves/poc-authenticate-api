@@ -1,4 +1,4 @@
-export interface RegisterRequestBody {
+export interface SignupRequestBody {
   email: string
   name: string
   password: string

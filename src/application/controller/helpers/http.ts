@@ -54,7 +54,7 @@ export const notFoundError = ({
 
 export const created = (body: ResponseBody): Response => {
   return {
-    statusCode: 201,
+    statusCode: 200,
     body,
   }
 }

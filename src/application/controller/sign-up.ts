@@ -1,9 +1,9 @@
 import { badRequest, conflict, created, serverError } from './helpers/http'
 import { UserAlreadyExists, ValidationError } from '../../shared/utils/errors'
 import { IController, IRequest, IResponse } from './interfaces/IController'
-import { RegisterRequestBody } from './types'
+import { SignupRequestBody } from './types'
 
-interface RegisterUserUseCaseParams {
+interface SignupUserUseCaseParams {
   execute: (params: {
     email: string
     name: string
@@ -12,15 +12,13 @@ interface RegisterUserUseCaseParams {
   }) => Promise<{ id: string; created_at: string; modified_at: string }>
 }
 
-export class CreateUserController implements IController {
-  constructor(
-    private readonly registerUserUseCase: RegisterUserUseCaseParams
-  ) {}
+export class SignupController implements IController {
+  constructor(private readonly signupUserUseCase: SignupUserUseCaseParams) {}
 
   async handle({ body }: IRequest): Promise<IResponse> {
     try {
       const { email, name, password, telephones } =
-        body as unknown as RegisterRequestBody
+        body as unknown as SignupRequestBody
 
       const telephonesData = !telephones
         ? []
@@ -30,7 +28,7 @@ export class CreateUserController implements IController {
           }))
 
       const { id, created_at, modified_at } =
-        await this.registerUserUseCase.execute({
+        await this.signupUserUseCase.execute({
           email,
           name,
           password,

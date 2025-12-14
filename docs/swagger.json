@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/api/auth/register": {
+    "/api/auth/sign-up": {
       "post": {
         "summary": "Registrar novo usuário",
         "description": "Cria uma nova conta de usuário",
@@ -21,7 +21,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/SignupRequest"
               }
             }
           }
@@ -32,7 +32,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegisterResponse"
+                  "$ref": "#/components/schemas/SignupResponse"
                 }
               }
             }
@@ -60,27 +60,27 @@
         }
       }
     },
-    "/api/auth/login": {
+    "/api/auth/sign-in": {
       "post": {
-        "summary": "Fazer login",
+        "summary": "Fazer sign-in",
         "description": "Autentica um usuário e retorna um token JWT",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/SignInRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Login realizado com sucesso",
+            "description": "Sign-in realizado com sucesso",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/SignInResponse"
                 }
               }
             }
@@ -161,7 +161,7 @@
       }
     },
     "schemas": {
-      "RegisterRequest": {
+      "SignupRequest": {
         "type": "object",
         "required": ["name", "email", "password", "telephones"],
         "properties": {
@@ -187,7 +187,7 @@
           }
         }
       },
-      "RegisterResponse": {
+      "SignupResponse": {
         "type": "object",
         "properties": {
           "id": {
@@ -207,7 +207,7 @@
           }
         }
       },
-      "LoginRequest": {
+      "SignInRequest": {
         "type": "object",
         "required": ["email", "password"],
         "properties": {
@@ -222,7 +222,7 @@
           }
         }
       },
-      "LoginResponse": {
+      "SignInResponse": {
         "type": "object",
         "properties": {
           "accessToken": {
