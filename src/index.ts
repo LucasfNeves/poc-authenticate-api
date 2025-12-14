@@ -17,22 +17,18 @@ const __dirname = path.dirname(__filename)
 const logger = new Logger('Server')
 const app = express()
 
-// Middlewares
 app.use(express.json())
 app.use(cors())
 
-// Debug middleware
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   console.log(`${req.method} ${req.path}`)
   next()
 })
 
-// Swagger
 const swaggerPath = path.resolve(__dirname, '../docs/swagger.json')
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf-8'))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
-// Rotas - ANTES do bootstrap
 app.use('/api', router)
 logger.info('Rotas registradas em /api')
 
@@ -48,12 +44,6 @@ async function bootstrap() {
 
     app.listen(port, () => {
       logger.info(`Servidor rodando na porta ${port}`)
-      logger.info(
-        `Documentação disponível em http://localhost:${port}/api-docs`
-      )
-      logger.info('Rotas disponíveis:')
-      logger.info('  GET  /api/health')
-      logger.info('  POST /api/auth/register')
     })
   } catch (error) {
     logger.error('Falha ao iniciar aplicação', error)

@@ -1,9 +1,8 @@
-import { createDefaultPreset } from 'ts-jest'
-import type { Config } from 'jest'
+const { createDefaultPreset } = require('ts-jest')
 
 const tsJestTransformCfg = createDefaultPreset().transform
 
-const config: Config = {
+const config = {
   testEnvironment: 'node',
   extensionsToTreatAsEsm: ['.ts'],
   moduleNameMapper: {
@@ -45,4 +44,4 @@ const config: Config = {
   },
 }
 
-export default config
+module.exports = config
