@@ -14,6 +14,7 @@
     "docker:logs": "cd docker && docker-compose logs -f",
     "docker:exec": "docker exec -it docker-backend-1 bash",
     "docker:dev": "docker exec -it docker-backend-1 npm run dev",
+    "docker:exit": "exit",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",

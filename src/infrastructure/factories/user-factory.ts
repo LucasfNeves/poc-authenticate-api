@@ -21,14 +21,9 @@ export const makeSignInController = () => {
   const usersRepository = new SequelizeUsersRepository()
   const jwtAdapter = new JwtAdapterImpl()
 
-  const signInUseCase = new SignInUseCase(
-    usersRepository,
-    jwtAdapter
-  )
+  const signInUseCase = new SignInUseCase(usersRepository, jwtAdapter)
 
-  const signInController = new SignInController(
-    signInUseCase
-  )
+  const signInController = new SignInController(signInUseCase)
 
   return signInController
 }
