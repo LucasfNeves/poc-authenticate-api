@@ -11,19 +11,25 @@ services:
     command: sleep infinity
     stop_grace_period: 2s
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - app-network
+    environment:
+      - POSTGRES_HOST=db
   db:
     image: postgres:14.3
     ports:
       - 5432:5432
-    volumes:
-      - ../database/create.sql:/docker-entrypoint-initdb.d/init.sql
     env_file:
       - ../.env
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   app-network:
