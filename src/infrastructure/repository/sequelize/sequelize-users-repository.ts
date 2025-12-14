@@ -4,6 +4,16 @@ import {
   UserCreationInput,
   UserPublicData,
 } from '../interfaces'
+import { TelephoneType } from '../../../shared/utils/types'
+
+type UserJsonData = {
+  id: string
+  name: string
+  email: string
+  telephones: TelephoneType[]
+  created_at: string
+  updated_at: string
+}
 
 export class SequelizeUsersRepository implements UsersRepository {
   async findByEmail(email: string): Promise<User | null> {
@@ -24,18 +34,22 @@ export class SequelizeUsersRepository implements UsersRepository {
   }
 
   async findById(userId: string): Promise<UserPublicData | null> {
-    const user = await User.findByPk(userId, {
-      attributes: ['id', 'name', 'email'],
-    })
+    const user = await User.findByPk(userId)
 
     if (!user) {
       return null
     }
 
+    const { id, name, email, telephones, created_at, updated_at } =
+      user.toJSON() as unknown as UserJsonData
+
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
+      id,
+      name,
+      email,
+      telephones,
+      createdAt: created_at,
+      updatedAt: updated_at,
     }
   }
 }

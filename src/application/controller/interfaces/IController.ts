@@ -1,6 +1,7 @@
 export interface IRequest {
   body: Record<string, unknown>
   userId?: string
+  metadata?: Record<string, unknown>
 }
 
 export interface IResponse {

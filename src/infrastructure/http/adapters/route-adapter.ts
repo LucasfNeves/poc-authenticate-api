@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
 import { IController } from '../../../application/controller/interfaces/IController'
 
-interface RequestWithUserId extends Request {
+interface RequestWithMetadata extends Request {
   userId?: string
+  metadata?: Record<string, unknown>
 }
 
 export const routeAdapter = (controller: IController) => {
@@ -12,7 +13,8 @@ export const routeAdapter = (controller: IController) => {
       params: req.params,
       query: req.query,
       headers: req.headers,
-      userId: (req as RequestWithUserId).userId,
+      userId: (req as RequestWithMetadata).userId,
+      metadata: (req as RequestWithMetadata).metadata,
     }
 
     const httpResponse = await controller.handle(request)

@@ -20,8 +20,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`)
+app.use((req, _res, next) => {
   next()
 })
 
@@ -44,12 +43,6 @@ async function bootstrap() {
 
     app.listen(port, () => {
       logger.info(`Servidor rodando na porta ${port}`)
-      logger.info(
-        `Documentação disponível em http://localhost:${port}/api-docs`
-      )
-      logger.info('Rotas disponíveis:')
-      logger.info('  GET  /api/health')
-      logger.info('  POST /api/auth/register')
     })
   } catch (error) {
     logger.error('Falha ao iniciar aplicação', error)

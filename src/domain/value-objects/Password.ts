@@ -1,3 +1,5 @@
+import { ValidationError } from '../../shared/utils/errors'
+
 export class Password {
   private readonly value: string
 
@@ -6,14 +8,18 @@ export class Password {
   }
 
   static create(password: string): Password {
+    if (!password) {
+      throw new ValidationError('Password is required')
+    }
+
     const trimmedPassword = password.trim()
 
     if (!trimmedPassword) {
-      throw new Error('Password is required')
+      throw new ValidationError('Password is required')
     }
 
     if (trimmedPassword.length < 6) {
-      throw new Error('Password must have at least 6 characters')
+      throw new ValidationError('Password must have at least 6 characters')
     }
 
     return new Password(trimmedPassword)

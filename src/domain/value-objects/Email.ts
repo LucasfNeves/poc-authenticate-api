@@ -1,3 +1,5 @@
+import { ValidationError } from '../../shared/utils/errors'
+
 export class Email {
   private readonly value: string
 
@@ -6,14 +8,18 @@ export class Email {
   }
 
   static create(email: string): Email {
+    if (!email) {
+      throw new ValidationError('Email is required')
+    }
+
     const trimmedEmail = email.trim()
 
     if (!trimmedEmail) {
-      throw new Error('Email is required')
+      throw new ValidationError('Email is required')
     }
 
     if (!this.isValid(trimmedEmail)) {
-      throw new Error('Please provide a valid e-mail')
+      throw new ValidationError('Please provide a valid e-mail')
     }
 
     return new Email(trimmedEmail)

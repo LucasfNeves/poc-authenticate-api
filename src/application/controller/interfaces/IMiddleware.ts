@@ -8,7 +8,7 @@ export interface IResponse {
 }
 
 export interface IData {
-  data: { userId: string }
+  data: { id: string; email?: string }
 }
 
 export interface IMiddleware {

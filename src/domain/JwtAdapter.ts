@@ -1,4 +1,3 @@
-// src/adapters/jwt-adapter.ts
 import jwt from 'jsonwebtoken'
 import { env } from '../config/env'
 
@@ -8,6 +7,13 @@ export interface JwtAdapter {
 
 export class JwtAdapterImpl implements JwtAdapter {
   sign(payload: object, expiresIn: string): string {
-    return jwt.sign(payload, env.jwtSecret, { expiresIn } as jwt.SignOptions)
+    if (!env.jwtSecret) {
+      throw new Error('JWT secret is not defined')
+    }
+    return jwt.sign(
+      payload,
+      env.jwtSecret as string,
+      { expiresIn } as jwt.SignOptions
+    )
   }
 }
