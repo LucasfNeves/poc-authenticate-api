@@ -44,30 +44,59 @@ describe('User Schemas', () => {
     })
 
     it('should reject when telephones is missing', () => {
-      const result = createUserSchema.safeParse({
-        name: 'John Doe',
-        email: 'john@example.com',
-        password: 'password123',
-      })
-
-      expect(result.success).toBe(false)
+      try {
+        createUserSchema.parse({
+          name: 'John Doe',
+          email: 'john@example.com',
+          password: 'password123',
+        })
+        fail('Should have thrown an error')
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+        if (error instanceof Error) {
+          expect(error.message).toBe('Telephones field is required')
+        }
+      }
     })
 
-    it('should reject when name is missing or empty', () => {
-      const result1 = createUserSchema.safeParse({
+    it('should reject when name is missing', () => {
+      const result = createUserSchema.safeParse({
         email: 'john@example.com',
         password: 'password123',
         telephones: [{ number: 987654321, area_code: 11 }],
       })
-      const result2 = createUserSchema.safeParse({
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe('Name is required')
+      }
+    })
+
+    it('should reject when name is empty after trim', () => {
+      const result = createUserSchema.safeParse({
         name: '   ',
         email: 'john@example.com',
         password: 'password123',
         telephones: [{ number: 987654321, area_code: 11 }],
       })
 
-      expect(result1.success).toBe(false)
-      expect(result2.success).toBe(false)
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe('Name is required')
+      }
+    })
+
+    it('should reject when email is missing', () => {
+      const result = createUserSchema.safeParse({
+        name: 'John Doe',
+        password: 'password123',
+        telephones: [{ number: 987654321, area_code: 11 }],
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe('Email is required')
+      }
     })
 
     it('should reject when email is invalid', () => {
@@ -79,6 +108,24 @@ describe('User Schemas', () => {
       })
 
       expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe(
+          'Please provide a valid e-mail'
+        )
+      }
+    })
+
+    it('should reject when password is missing', () => {
+      const result = createUserSchema.safeParse({
+        name: 'John Doe',
+        email: 'john@example.com',
+        telephones: [{ number: 987654321, area_code: 11 }],
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe('Password is required')
+      }
     })
 
     it('should reject when password is shorter than 6 characters', () => {
@@ -90,6 +137,79 @@ describe('User Schemas', () => {
       })
 
       expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe(
+          'Password must have at least 6 characters'
+        )
+      }
+    })
+
+    it('should reject when telephone number is missing', () => {
+      try {
+        createUserSchema.parse({
+          name: 'John Doe',
+          email: 'john@example.com',
+          password: 'password123',
+          telephones: [{ area_code: 11 }],
+        })
+        fail('Should have thrown an error')
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+        if (error instanceof Error) {
+          expect(error.message).toBe('Phone number is required')
+        }
+      }
+    })
+
+    it('should reject when telephone area_code is missing', () => {
+      try {
+        createUserSchema.parse({
+          name: 'John Doe',
+          email: 'john@example.com',
+          password: 'password123',
+          telephones: [{ number: 987654321 }],
+        })
+        fail('Should have thrown an error')
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+        if (error instanceof Error) {
+          expect(error.message).toBe('Area code is required')
+        }
+      }
+    })
+
+    it('should reject when telephone number is not a valid number', () => {
+      try {
+        createUserSchema.parse({
+          name: 'John Doe',
+          email: 'john@example.com',
+          password: 'password123',
+          telephones: [{ number: 'invalid', area_code: 11 }],
+        })
+        fail('Should have thrown an error')
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+        if (error instanceof Error) {
+          expect(error.message).toBe('Phone number must be a valid number')
+        }
+      }
+    })
+
+    it('should reject when telephone area_code is not a valid number', () => {
+      try {
+        createUserSchema.parse({
+          name: 'John Doe',
+          email: 'john@example.com',
+          password: 'password123',
+          telephones: [{ number: 987654321, area_code: 'invalid' }],
+        })
+        fail('Should have thrown an error')
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+        if (error instanceof Error) {
+          expect(error.message).toBe('Area code must be a valid number')
+        }
+      }
     })
   })
 
@@ -109,6 +229,17 @@ describe('User Schemas', () => {
       }
     })
 
+    it('should reject when email is missing', () => {
+      const result = authenticateUserSchema.safeParse({
+        password: 'password123',
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe('Email is required')
+      }
+    })
+
     it('should reject when email is invalid', () => {
       const result = authenticateUserSchema.safeParse({
         email: 'not-an-email',
@@ -116,6 +247,22 @@ describe('User Schemas', () => {
       })
 
       expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe(
+          'Please provide a valid e-mail'
+        )
+      }
+    })
+
+    it('should reject when password is missing', () => {
+      const result = authenticateUserSchema.safeParse({
+        email: 'john@example.com',
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe('Password is required')
+      }
     })
 
     it('should reject when password is shorter than 6 characters', () => {
@@ -125,6 +272,11 @@ describe('User Schemas', () => {
       })
 
       expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.error.issues[0].message).toBe(
+          'Password must have at least 6 characters'
+        )
+      }
     })
   })
 })
