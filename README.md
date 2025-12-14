@@ -1,23 +1,24 @@
 # API de Autenticação - Node.js
 
-API RESTful de autenticação desenvolvida com Node.js, Express, TypeScript e PostgreSQL.
+API RESTful de autenticação desenvolvida com Node.js, Express, TypeScript e PostgreSQL seguindo os princípios de Clean Architecture.
 
 ## Tecnologias
 
-- **Node.js** v20.13.1
+- **Node.js** v20+
 - **TypeScript** 5.9.3
 - **Express.js** - Framework web
-- **PostgreSQL** 14.3 - Banco de dados
+- **PostgreSQL** - Banco de dados
 - **Sequelize** - ORM
 - **JWT** - Autenticação
 - **Bcrypt** - Hash de senhas
 - **Zod** - Validação de schemas
 - **Jest** - Testes unitários e de integração
-- **Winston** - Logger profissional
+- **Winston** - Logger
 - **Docker** - Containerização
 - **Swagger** - Documentação da API
-- **ESLint + Prettier** - Code quality
+- **ESLint** - Linting
 - **Husky + Commitlint** - Git hooks
+- **GitHub Actions** - CI/CD
 
 ## Pré-requisitos
 
@@ -30,8 +31,8 @@ API RESTful de autenticação desenvolvida com Node.js, Express, TypeScript e Po
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/LucasfNeves/poc-authenticate-api.git
-cd poc-authenticate-api
+git clone <repository-url>
+cd autenticacao-nodejs
 ```
 
 ### 2. Instale as dependências
@@ -53,7 +54,7 @@ Edite o arquivo `.env` com suas configurações:
 ```env
 # Database Configuration
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your_secure_password
+POSTGRES_PASSWORD=change-this-password
 POSTGRES_DB=app
 POSTGRES_HOST=db
 POSTGRES_PORT=5432
@@ -62,8 +63,8 @@ POSTGRES_PORT=5432
 PORT=3000
 
 # JWT Configuration
-JWT_SECRET=your_jwt_secret_key_here
-JWT_EXPIRES_IN=15m
+JWT_SECRET=change-this-secret
+JWT_EXPIRES_IN=24h
 ```
 
 ### 4. Suba os containers Docker
@@ -72,19 +73,15 @@ JWT_EXPIRES_IN=15m
 npm run docker:up
 ```
 
-### 5. Execute as migrações do banco de dados
+### 5. Execute o projeto
 
 ```bash
-# Acesse o container
+# Executar localmente
+npm run dev
+
+# OU acessar o container e executar
 npm run docker:exec
-
-# Dentro do container, rode as migrações (quando implementadas)
-# npm run migrate
-```
-
-### 6. Execute o projeto
-
-```bash
+# Dentro do container:
 npm run dev
 ```
 
@@ -108,14 +105,6 @@ A documentação Swagger está disponível em:
 
 ```
 http://localhost:3000/api-docs
-```
-
-### Acesso em Produção
-
-<!-- TODO: Atualizar com a URL de produção quando disponível -->
-
-```
-https://sua-api-em-producao.com/api-docs
 ```
 
 ## Testes
@@ -146,25 +135,35 @@ O relatório de cobertura HTML estará disponível em: `coverage/index.html`
 src/
 ├── application/           # Camada de aplicação
 │   ├── controller/       # Controllers HTTP
-│   ├── usecase/          # Casos de uso
-│   └── schemas/          # Schemas de validação (Zod)
+│   ├── middlewares/      # Middlewares
+│   └── usecase/          # Casos de uso
+├── config/               # Configurações
+│   ├── constant.ts       # Constantes
+│   └── env.ts           # Variáveis de ambiente
 ├── domain/               # Camada de domínio
 │   ├── value-objects/    # Value Objects (DDD)
 │   └── JwtAdapter.ts     # Adaptador JWT
 ├── infrastructure/       # Camada de infraestrutura
-│   ├── database/         # Configuração e models do DB
+│   ├── database/         # Configuração do banco
 │   ├── factories/        # Factories (DI)
 │   ├── http/            # Adapters HTTP
-│   └── repository/       # Repositórios (InMemory e Sequelize)
+│   └── repository/       # Repositórios
 ├── routes/              # Definição de rotas
 ├── shared/              # Código compartilhado
 │   └── utils/           # Utilitários e erros
-├── config/              # Configurações
 └── index.ts             # Entrada da aplicação
 
 test/
 ├── unit/                # Testes unitários
-└── integration/         # Testes de integração
+├── integration/         # Testes de integração
+└── setup.ts             # Configuração dos testes
+
+docker/
+├── docker-compose.yaml  # Configuração Docker
+└── Dockerfile           # Imagem Docker
+
+docs/
+└── swagger.json         # Documentação da API
 ```
 
 ## Endpoints Principais
@@ -209,7 +208,7 @@ GET /api/user
 Authorization: Bearer <jwt_token>
 ```
 
-Para mais detalhes sobre todos os endpoints, acesse a [documentação Swagger](#-documentação-da-api).
+Para mais detalhes sobre todos os endpoints, acesse a [documentação Swagger](#documentação-da-api).
 
 ## Comandos Docker
 
@@ -226,8 +225,13 @@ npm run docker:restart
 # Ver logs dos containers
 npm run docker:logs
 
-# Acessar o terminal do container backend
+# Acessar o terminal do container
 npm run docker:exec
+# Dentro do container:
+npm run dev
+
+# Sair do container (quando estiver dentro dele)
+npm run docker:exit
 ```
 
 ## Scripts Disponíveis
@@ -241,6 +245,7 @@ npm run test:watch      # Executa os testes em modo watch
 npm run test:coverage   # Executa os testes com relatório de cobertura
 npm run lint            # Verifica o código com ESLint
 npm run lint:fix        # Corrige problemas do ESLint automaticamente
+npm run docker:exit     # Sair do container
 ```
 
 ## Arquitetura
@@ -264,15 +269,32 @@ O projeto segue os princípios de **Clean Architecture** com 3 camadas principai
 - [x] Cadastro de usuários (sign-up) com validação
 - [x] Hash de senhas com bcrypt
 - [x] Autenticação de usuários (sign-in) com JWT
+- [x] Obter dados do usuário autenticado
 - [x] Validação de dados com Zod
 - [x] Value Objects para domínio
-- [x] Testes unitários e de integração
+- [x] Middleware de autenticação JWT
+- [x] Testes unitários e de integração (75%+ cobertura)
 - [x] Documentação Swagger
 - [x] Logger com Winston
 - [x] Docker para desenvolvimento
-- [x] Middleware de autenticação
+- [x] Clean Architecture
+- [x] CI/CD com GitHub Actions
+- [x] Conventional Commits
+- [x] ESLint e Prettier
 
-### Conventional Commits
+## CI/CD
+
+O projeto utiliza GitHub Actions para integração e entrega contínua:
+
+- **CI (Continuous Integration)**: Executa apenas em Pull Requests
+  - Linting com ESLint
+  - Testes unitários e de integração
+  - Relatório de cobertura
+- **CD (Continuous Deployment)**: Executa apenas na branch `main`
+  - Build da aplicação
+  - Deploy (configurar conforme necessário)
+
+## Conventional Commits
 
 Este projeto utiliza [Conventional Commits](https://www.conventionalcommits.org/):
 
@@ -282,6 +304,16 @@ Este projeto utiliza [Conventional Commits](https://www.conventionalcommits.org/
 - `test:` Testes
 - `refactor:` Refatoração
 - `chore:` Tarefas gerais
+
+## Cobertura de Testes
+
+O projeto mantém uma cobertura de testes superior a 75%. Para visualizar o relatório:
+
+```bash
+npm run test:coverage
+```
+
+O relatório HTML estará disponível em: `coverage/lcov-report/index.html`
 
 ## Autor
 
