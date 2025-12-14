@@ -105,7 +105,7 @@ describe('CreateUserController', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    expect(response.body.errorMessage).toBe('Name is required')
+    expect(response.body.message).toBe('Name is required')
     expect(registerUseCaseMock.execute).not.toHaveBeenCalled()
   })
 
@@ -120,7 +120,7 @@ describe('CreateUserController', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    expect(response.body.errorMessage).toBe(
+    expect(response.body.message).toBe(
       'At least one telephone is required'
     )
     expect(registerUseCaseMock.execute).not.toHaveBeenCalled()

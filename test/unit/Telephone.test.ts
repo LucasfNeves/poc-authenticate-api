@@ -50,13 +50,13 @@ describe('Telephone Value Object', () => {
 
     it('should throw error when number has less than 8 digits', () => {
       expect(() => Telephone.create(1234567, 11)).toThrow(
-        'Phone number must have 8 or 9 digits'
+        'Phone number must have exactly 8 or 9 digits'
       )
     })
 
     it('should throw error when number has more than 9 digits', () => {
       expect(() => Telephone.create(1234567890, 11)).toThrow(
-        'Phone number must have 8 or 9 digits'
+        'Phone number must have exactly 8 or 9 digits'
       )
     })
 
