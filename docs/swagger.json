@@ -60,27 +60,27 @@
         }
       }
     },
-    "/api/auth/login": {
+    "/api/auth/sign-in": {
       "post": {
-        "summary": "Fazer login",
+        "summary": "Fazer sign-in",
         "description": "Autentica um usuário e retorna um token JWT",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/SignInRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Login realizado com sucesso",
+            "description": "Sign-in realizado com sucesso",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/SignInResponse"
                 }
               }
             }
@@ -207,7 +207,7 @@
           }
         }
       },
-      "LoginRequest": {
+      "SignInRequest": {
         "type": "object",
         "required": ["email", "password"],
         "properties": {
@@ -222,7 +222,7 @@
           }
         }
       },
-      "LoginResponse": {
+      "SignInResponse": {
         "type": "object",
         "properties": {
           "accessToken": {

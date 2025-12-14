@@ -5,16 +5,16 @@ import { ACCESS_TOKEN_EXPIRATION } from '../../config/constant'
 import { InvalidCredentialsError } from '../../shared/utils/errors'
 import { Email, Password } from '../../domain/value-objects'
 
-interface AuthenticateUseCaseParams {
+interface SignInUseCaseParams {
   email: string
   password: string
 }
 
-interface AuthenticateUseCaseResponse {
+interface SignInUseCaseResponse {
   accessToken: string
 }
 
-export class AuthenticateUseCase {
+export class SignInUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private readonly jwtAdapter: JwtAdapter
@@ -35,7 +35,7 @@ export class AuthenticateUseCase {
   async execute({
     email,
     password,
-  }: AuthenticateUseCaseParams): Promise<AuthenticateUseCaseResponse> {
+  }: SignInUseCaseParams): Promise<SignInUseCaseResponse> {
     const emailVO = Email.create(email)
     const passwordVO = Password.create(password)
 

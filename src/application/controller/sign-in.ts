@@ -1,4 +1,4 @@
-import { AuthenticateUseCase } from '../usecase/authenticate'
+import { SignInUseCase } from '../usecase/sign-in'
 import { IController, IRequest, IResponse } from './interfaces/IController'
 import {
   InvalidCredentialsError,
@@ -6,8 +6,8 @@ import {
 } from '../../shared/utils/errors'
 import { badRequest, ok, serverError, unauthorized } from './helpers/http'
 
-export class AuthenticateUserController implements IController {
-  constructor(private readonly authenticateUseCase: AuthenticateUseCase) {}
+export class SignInController implements IController {
+  constructor(private readonly signInUseCase: SignInUseCase) {}
 
   async handle(request: IRequest): Promise<IResponse> {
     try {
@@ -16,7 +16,7 @@ export class AuthenticateUserController implements IController {
         password: string
       }
 
-      const { accessToken } = await this.authenticateUseCase.execute({
+      const { accessToken } = await this.signInUseCase.execute({
         email,
         password,
       })

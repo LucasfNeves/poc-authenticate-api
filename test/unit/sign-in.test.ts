@@ -1,20 +1,20 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals'
 import { faker } from '@faker-js/faker'
-import { AuthenticateUserController } from '../../src/application/controller/authenticate'
+import { SignInController } from '../../src/application/controller/sign-in'
 import {
   InvalidCredentialsError,
   ValidationError,
 } from '../../src/shared/utils/errors'
-import { AuthenticateUseCase } from '../../src/application/usecase/authenticate'
+import { SignInUseCase } from '../../src/application/usecase/sign-in'
 
-type AuthenticateUseCaseExecute = (params: {
+type SignInUseCaseExecute = (params: {
   email: string
   password: string
 }) => Promise<{ accessToken: string }>
 
-describe('AuthenticateUserController', () => {
-  let authenticateUseCaseMock: jest.Mocked<AuthenticateUseCase>
-  let controller: AuthenticateUserController
+describe('SignInController', () => {
+  let signInUseCaseMock: jest.Mocked<SignInUseCase>
+  let controller: SignInController
 
   const makeAuthData = (
     overrides: { email?: string; password?: string } = {}
@@ -26,12 +26,12 @@ describe('AuthenticateUserController', () => {
   }
 
   beforeEach(() => {
-    authenticateUseCaseMock = {
-      execute: jest.fn<AuthenticateUseCaseExecute>().mockResolvedValue({
+    signInUseCaseMock = {
+      execute: jest.fn<SignInUseCaseExecute>().mockResolvedValue({
         accessToken: 'valid-jwt-token',
       }),
-    } as unknown as jest.Mocked<AuthenticateUseCase>
-    controller = new AuthenticateUserController(authenticateUseCaseMock)
+    } as unknown as jest.Mocked<SignInUseCase>
+    controller = new SignInController(signInUseCaseMock)
   })
 
   it('should return 200 with access token when credentials are valid', async () => {
@@ -44,7 +44,7 @@ describe('AuthenticateUserController', () => {
     expect(response.statusCode).toBe(200)
     expect(response.body).toHaveProperty('accessToken')
     expect(response.body.accessToken).toBe('valid-jwt-token')
-    expect(authenticateUseCaseMock.execute).toHaveBeenCalledTimes(1)
+    expect(signInUseCaseMock.execute).toHaveBeenCalledTimes(1)
   })
 
   it('should call use case with correct parameters', async () => {
@@ -54,14 +54,14 @@ describe('AuthenticateUserController', () => {
       body: authData,
     })
 
-    expect(authenticateUseCaseMock.execute).toHaveBeenCalledWith({
+    expect(signInUseCaseMock.execute).toHaveBeenCalledWith({
       email: authData.email,
       password: authData.password,
     })
   })
 
   it('should return 401 when credentials are invalid', async () => {
-    authenticateUseCaseMock.execute.mockRejectedValueOnce(
+    signInUseCaseMock.execute.mockRejectedValueOnce(
       new InvalidCredentialsError()
     )
 
@@ -77,7 +77,7 @@ describe('AuthenticateUserController', () => {
   })
 
   it('should return 400 when validation fails for empty email', async () => {
-    authenticateUseCaseMock.execute.mockRejectedValueOnce(
+    signInUseCaseMock.execute.mockRejectedValueOnce(
       new ValidationError('Email is required')
     )
 
@@ -93,7 +93,7 @@ describe('AuthenticateUserController', () => {
   })
 
   it('should return 400 when validation fails for invalid email', async () => {
-    authenticateUseCaseMock.execute.mockRejectedValueOnce(
+    signInUseCaseMock.execute.mockRejectedValueOnce(
       new ValidationError('Please provide a valid e-mail')
     )
 
@@ -109,7 +109,7 @@ describe('AuthenticateUserController', () => {
   })
 
   it('should return 400 when validation fails for empty password', async () => {
-    authenticateUseCaseMock.execute.mockRejectedValueOnce(
+    signInUseCaseMock.execute.mockRejectedValueOnce(
       new ValidationError('Password is required')
     )
 
@@ -125,7 +125,7 @@ describe('AuthenticateUserController', () => {
   })
 
   it('should return 400 when validation error occurs', async () => {
-    authenticateUseCaseMock.execute.mockRejectedValueOnce(
+    signInUseCaseMock.execute.mockRejectedValueOnce(
       new ValidationError('Invalid input')
     )
 
@@ -141,7 +141,7 @@ describe('AuthenticateUserController', () => {
   })
 
   it('should return 400 when generic Error occurs', async () => {
-    authenticateUseCaseMock.execute.mockRejectedValueOnce(
+    signInUseCaseMock.execute.mockRejectedValueOnce(
       new Error('Some error message')
     )
 
@@ -157,7 +157,7 @@ describe('AuthenticateUserController', () => {
   })
 
   it('should return 500 when unknown error occurs', async () => {
-    authenticateUseCaseMock.execute.mockRejectedValueOnce('Unknown error')
+    signInUseCaseMock.execute.mockRejectedValueOnce('Unknown error')
 
     const authData = makeAuthData()
 

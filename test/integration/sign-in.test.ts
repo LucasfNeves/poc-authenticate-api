@@ -1,17 +1,17 @@
 import { faker } from '@faker-js/faker'
 import bcrypt from 'bcrypt'
 import { InMemoryUsersRepository } from '../../src/infrastructure/repository/inMemory/in-memory-users-repository'
-import { AuthenticateUseCase } from '../../src/application/usecase/authenticate'
+import { SignInUseCase } from '../../src/application/usecase/sign-in'
 import { beforeEach, describe, it, expect, jest } from '@jest/globals'
 import { JwtAdapter, JwtAdapterImpl } from '../../src/domain/JwtAdapter'
 import { InvalidCredentialsError } from '../../src/shared/utils/errors'
 import { BCRYPT_SALT_ROUNDS } from '../../src/config/constant'
 
-describe('AuthenticatorUseCase', () => {
+describe('SignInUseCase', () => {
   let usersRepository: InMemoryUsersRepository
   let jwtAdapter: JwtAdapter
   let jwtSignSpy: jest.Mock
-  let authenticateUseCase: AuthenticateUseCase
+  let signInUseCase: SignInUseCase
 
   const createUser = async () => {
     const email = faker.internet.email()
@@ -33,13 +33,13 @@ describe('AuthenticatorUseCase', () => {
     jwtAdapter = {
       sign: jwtSignSpy,
     } as JwtAdapterImpl
-    authenticateUseCase = new AuthenticateUseCase(usersRepository, jwtAdapter)
+    signInUseCase = new SignInUseCase(usersRepository, jwtAdapter)
   })
 
-  it('should be able to authenticate', async () => {
+  it('should be able to sign in', async () => {
     const { email, password } = await createUser()
 
-    const { accessToken } = await authenticateUseCase.execute({
+    const { accessToken } = await signInUseCase.execute({
       email,
       password,
     })
@@ -50,7 +50,7 @@ describe('AuthenticatorUseCase', () => {
   it('should include email and id in JWT token payload', async () => {
     const { email, password, user } = await createUser()
 
-    await authenticateUseCase.execute({
+    await signInUseCase.execute({
       email,
       password,
     })
@@ -67,10 +67,10 @@ describe('AuthenticatorUseCase', () => {
     )
   })
 
-  it('should not authenticate with wrong password', async () => {
+  it('should not sign in with wrong password', async () => {
     const { email } = await createUser()
 
-    const promise = authenticateUseCase.execute({
+    const promise = signInUseCase.execute({
       email,
       password: 'wrong-password',
     })
@@ -78,11 +78,11 @@ describe('AuthenticatorUseCase', () => {
     await expect(promise).rejects.toBeInstanceOf(InvalidCredentialsError)
   })
 
-  it('should not authenticate with non existing email', async () => {
+  it('should not sign in with non existing email', async () => {
     const email = faker.internet.email()
     const password = faker.internet.password({ length: 10 })
 
-    const promise = authenticateUseCase.execute({
+    const promise = signInUseCase.execute({
       email,
       password,
     })
@@ -90,11 +90,11 @@ describe('AuthenticatorUseCase', () => {
     await expect(promise).rejects.toBeInstanceOf(InvalidCredentialsError)
   })
 
-  it('should not authenticate with wrong email', async () => {
+  it('should not sign in with wrong email', async () => {
     const { password } = await createUser()
     const email = faker.internet.email()
 
-    const promise = authenticateUseCase.execute({
+    const promise = signInUseCase.execute({
       email,
       password,
     })

@@ -171,7 +171,7 @@ test/
 
 ### Autenticação
 
-#### Registrar Novo Usuário
+#### Cadastrar Novo Usuário (Sign-up)
 
 ```http
 POST /api/auth/sign-up
@@ -180,8 +180,33 @@ Content-Type: application/json
 {
   "name": "John Doe",
   "email": "john@example.com",
+  "password": "senha123",
+  "telephones": [
+    {
+      "area_code": 11,
+      "number": 987654321
+    }
+  ]
+}
+```
+
+#### Autenticar Usuário (Sign-in)
+
+```http
+POST /api/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
   "password": "senha123"
 }
+```
+
+#### Obter Dados do Usuário
+
+```http
+GET /api/user
+Authorization: Bearer <jwt_token>
 ```
 
 Para mais detalhes sobre todos os endpoints, acesse a [documentação Swagger](#-documentação-da-api).
@@ -236,18 +261,16 @@ O projeto segue os princípios de **Clean Architecture** com 3 camadas principai
 
 ## Funcionalidades
 
-- [x] Registro de usuários com validação
+- [x] Cadastro de usuários (sign-up) com validação
 - [x] Hash de senhas com bcrypt
-- [x] Geração de JWT e Refresh Tokens
+- [x] Autenticação de usuários (sign-in) com JWT
 - [x] Validação de dados com Zod
 - [x] Value Objects para domínio
 - [x] Testes unitários e de integração
 - [x] Documentação Swagger
 - [x] Logger com Winston
 - [x] Docker para desenvolvimento
-- [ ] Login de usuários
-- [ ] Refresh Token
-- [ ] Middleware de autenticação
+- [x] Middleware de autenticação
 
 ### Conventional Commits
 
