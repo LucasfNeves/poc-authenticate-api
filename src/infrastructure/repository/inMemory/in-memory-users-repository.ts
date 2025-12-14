@@ -46,10 +46,18 @@ export class InMemoryUsersRepository implements UsersRepository {
       return null
     }
 
+    const userJson = user.toJSON() as unknown as {
+      created_at: string
+      updated_at: string
+    }
+
     return {
       id: user.id,
       name: user.name,
       email: user.email,
+      telephones: user.telephones,
+      createdAt: userJson.created_at,
+      updatedAt: userJson.updated_at,
     }
   }
 }
