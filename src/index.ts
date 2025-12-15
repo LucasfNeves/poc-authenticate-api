@@ -20,11 +20,11 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-app.use((req, _res, next) => {
+app.use((_req, _res, next) => {
   next()
 })
 
-app.get('/', (req, res) => res.status(200).json({ status: 'API is healthy' }))
+app.get('/', (_req, res) => res.status(200).json({ status: 'API is healthy' }))
 
 const swaggerPath = path.resolve(__dirname, '../docs/swagger.json')
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf-8'))
@@ -43,17 +43,24 @@ async function bootstrap() {
     await sequelize.sync({ alter: true })
     logger.info('Models sincronizados')
 
-    app.listen(port, () => {
-      logger.info(`Servidor rodando na porta ${port}`)
-    })
+    if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+      app.listen(port, () => {
+        logger.info(`Servidor rodando na porta ${port}`)
+      })
+    }
   } catch (error) {
     logger.error('Falha ao iniciar aplicação', error)
     if (error instanceof Error) {
       logger.error(`Detalhes: ${error.message}`)
       console.error(error.stack)
     }
-    process.exit(1)
+
+    if (!process.env.VERCEL) {
+      process.exit(1)
+    }
   }
 }
 
 bootstrap()
+
+export default app
