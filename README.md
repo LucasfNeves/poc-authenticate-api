@@ -11,7 +11,6 @@ API RESTful de autenticação desenvolvida com Node.js, Express, TypeScript e Po
 - **Sequelize** - ORM
 - **JWT** - Autenticação
 - **Bcrypt** - Hash de senhas
-- **Zod** - Validação de schemas
 - **Jest** - Testes unitários e de integração
 - **Winston** - Logger
 - **Docker** - Containerização
