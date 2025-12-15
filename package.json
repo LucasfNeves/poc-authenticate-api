@@ -5,9 +5,9 @@
   "description": "API RESTful com Node.js, Express e PostgreSQL",
   "main": "src/server.js",
   "scripts": {
-    "start": "node build/index.js",
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsup src/index.ts --format esm --out-dir build --clean --target node18",
+    "start": "node build/index.js",
     "docker:up": "cd docker && docker-compose up -d",
     "docker:down": "cd docker && docker-compose down",
     "docker:restart": "npm run docker:down && npm run docker:up",
@@ -35,6 +35,7 @@
     "@faker-js/faker": "10.1.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
+    "dotenv": "17.2.3",
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
@@ -61,7 +62,6 @@
     "@types/node": "^25.0.1",
     "@types/swagger-ui-express": "4.1.8",
     "cross-env": "10.1.0",
-    "dotenv": "17.2.3",
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
     "husky": "9.1.7",
@@ -70,6 +70,7 @@
     "nodemon": "^3.1.11",
     "supertest": "^7.1.4",
     "ts-jest": "29.4.6",
+    "tsup": "8.5.1",
     "tsx": "^4.21.0",
     "typescript-eslint": "^8.49.0"
   }
