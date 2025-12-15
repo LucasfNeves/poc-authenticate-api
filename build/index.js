@@ -392,25 +392,18 @@ var SignupUseCase = class {
       throw new UserAlreadyExists();
     }
     const telephonesData = telephonesVO.map((tel) => tel.getValue());
-    const userData = {
+    const createdUser = await this.usersRepository.create({
       name: nameVO.getValue(),
       email: emailVO.getValue(),
       password: hasedPassword,
       telephones: telephonesData
-    };
-    console.log("Creating user with data:", JSON.stringify(userData, null, 2));
-    const createdUser = await this.usersRepository.create(userData);
-    console.log("Created user object:", createdUser);
-    console.log("Created user ID:", createdUser?.id);
+    });
     const userJson = createdUser.toJSON();
-    console.log("User JSON:", JSON.stringify(userJson, null, 2));
-    const response = {
+    return {
       id: createdUser.id,
       created_at: userJson.created_at,
       modified_at: userJson.updated_at
     };
-    console.log("Final response:", JSON.stringify(response, null, 2));
-    return response;
   }
 };
 
@@ -510,30 +503,16 @@ var SignInUseCase = class {
     email,
     password
   }) {
-    console.log("SignIn - Raw input:", { email, password: password ? "[HIDDEN]" : "undefined" });
     const emailVO = Email.create(email);
     const passwordVO = Password.create(password);
-    console.log("SignIn - Email VO:", emailVO.getValue());
-    console.log("SignIn - Password VO exists:", !!passwordVO.getValue());
     const user = await this.usersRepository.findByEmail(emailVO.getValue());
-    console.log("SignIn - User found:", !!user);
-    console.log("SignIn - User has password:", !!user?.password);
     if (!user) {
       throw new InvalidCredentialsError();
     }
-    const userPassword = user.password;
-    const inputPassword = passwordVO.getValue();
-    console.log("SignIn - User password type:", typeof userPassword);
-    console.log("SignIn - Input password type:", typeof inputPassword);
-    console.log("SignIn - User password exists:", !!userPassword);
-    console.log("SignIn - Input password exists:", !!inputPassword);
-    if (!userPassword || !inputPassword) {
-      console.log("SignIn - Missing password data");
-      throw new InvalidCredentialsError();
-    }
-    console.log("SignIn - About to compare passwords");
-    const doesPasswordMatches = await compare(inputPassword, userPassword);
-    console.log("SignIn - Password match result:", doesPasswordMatches);
+    const doesPasswordMatches = await compare(
+      passwordVO.getValue(),
+      user.password
+    );
     if (!doesPasswordMatches) {
       throw new InvalidCredentialsError();
     }
@@ -590,7 +569,6 @@ var GetUserByIdUseCase = class {
     return {
       user: {
         id: user.id,
-        name: user.name,
         email: user.email,
         telephones: user.telephones || [],
         created_at: user.createdAt,
