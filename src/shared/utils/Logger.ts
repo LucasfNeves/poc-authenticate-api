@@ -36,7 +36,7 @@ export class Logger {
     winstonLogger.info(message, { context: this.context })
   }
 
-  error(message: string, error?: any): void {
+  error(message: string, error?: unknown): void {
     winstonLogger.error(message, { context: this.context, error })
   }
 
