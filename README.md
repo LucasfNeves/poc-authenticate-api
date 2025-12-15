@@ -75,10 +75,8 @@ npm run docker:up
 ### 5. Execute o projeto
 
 ```bash
-# Executar localmente
-npm run dev
 
-# OU acessar o container e executar
+# acessar o container e executar
 npm run docker:exec
 # Dentro do container:
 npm run dev
