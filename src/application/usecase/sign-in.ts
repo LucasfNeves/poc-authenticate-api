@@ -36,38 +36,19 @@ export class SignInUseCase {
     email,
     password,
   }: SignInUseCaseParams): Promise<SignInUseCaseResponse> {
-    console.log('SignIn - Raw input:', { email, password: password ? '[HIDDEN]' : 'undefined' })
-    
     const emailVO = Email.create(email)
     const passwordVO = Password.create(password)
-    
-    console.log('SignIn - Email VO:', emailVO.getValue())
-    console.log('SignIn - Password VO exists:', !!passwordVO.getValue())
 
     const user = await this.usersRepository.findByEmail(emailVO.getValue())
-    console.log('SignIn - User found:', !!user)
-    console.log('SignIn - User has password:', !!user?.password)
 
     if (!user) {
       throw new InvalidCredentialsError()
     }
 
-    const userPassword = user.password
-    const inputPassword = passwordVO.getValue()
-    
-    console.log('SignIn - User password type:', typeof userPassword)
-    console.log('SignIn - Input password type:', typeof inputPassword)
-    console.log('SignIn - User password exists:', !!userPassword)
-    console.log('SignIn - Input password exists:', !!inputPassword)
-
-    if (!userPassword || !inputPassword) {
-      console.log('SignIn - Missing password data')
-      throw new InvalidCredentialsError()
-    }
-
-    console.log('SignIn - About to compare passwords')
-    const doesPasswordMatches = await compare(inputPassword, userPassword)
-    console.log('SignIn - Password match result:', doesPasswordMatches)
+    const doesPasswordMatches = await compare(
+      passwordVO.getValue(),
+      user.password
+    )
 
     if (!doesPasswordMatches) {
       throw new InvalidCredentialsError()

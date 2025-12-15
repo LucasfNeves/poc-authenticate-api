@@ -56,28 +56,19 @@ export class SignupUseCase {
 
     const telephonesData = telephonesVO.map((tel) => tel.getValue())
 
-    const userData = {
+    const createdUser = await this.usersRepository.create({
       name: nameVO.getValue(),
       email: emailVO.getValue(),
       password: hasedPassword,
       telephones: telephonesData,
-    }
-    console.log('Creating user with data:', JSON.stringify(userData, null, 2))
-
-    const createdUser = await this.usersRepository.create(userData)
-    console.log('Created user object:', createdUser)
-    console.log('Created user ID:', createdUser?.id)
+    })
 
     const userJson = createdUser.toJSON() as UserJSON
-    console.log('User JSON:', JSON.stringify(userJson, null, 2))
 
-    const response = {
+    return {
       id: createdUser.id,
       created_at: userJson.created_at,
       modified_at: userJson.updated_at,
     }
-    console.log('Final response:', JSON.stringify(response, null, 2))
-
-    return response
   }
 }
