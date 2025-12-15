@@ -97,13 +97,22 @@ npm run build
 npm start
 ```
 
+## API em Produção
+
+A API está hospedada no **Render** e disponível em:
+
+- **Base URL**: `https://poc-authenticate-api.onrender.com`
+- **Todas as rotas**: Prefixadas com `/api`
+- **Documentação Swagger**: `https://poc-authenticate-api.onrender.com/api/docs/`
+
+> ⚠️ **Nota**: Por estar hospedada no Render (plano gratuito), a primeira requisição pode ter um tempo de resposta mais longo devido ao "cold start" do servidor.
+
 ## Documentação da API
 
 A documentação Swagger está disponível em:
 
-```
-[http://localhost:3000/api-docs](https://poc-authenticate-api.onrender.com/api/docs/)
-```
+- **Produção**: `https://poc-authenticate-api.onrender.com/api/docs/`
+- **Local**: `http://localhost:3000/api-docs`
 
 ## Testes
 
@@ -166,12 +175,18 @@ docs/
 
 ## Endpoints Principais
 
+Todos os endpoints são prefixados com `/api`:
+
 ### Autenticação
 
 #### Cadastrar Novo Usuário (Sign-up)
 
 ```http
-POST /api/auth/sign-up
+# Produção
+POST https://poc-authenticate-api.onrender.com/api/auth/sign-up
+# Local
+POST http://localhost:3000/api/auth/sign-up
+
 Content-Type: application/json
 
 {
@@ -190,7 +205,11 @@ Content-Type: application/json
 #### Autenticar Usuário (Sign-in)
 
 ```http
-POST /api/auth/sign-in
+# Produção
+POST https://poc-authenticate-api.onrender.com/api/auth/sign-in
+# Local
+POST http://localhost:3000/api/auth/sign-in
+
 Content-Type: application/json
 
 {
@@ -202,7 +221,11 @@ Content-Type: application/json
 #### Obter Dados do Usuário
 
 ```http
-GET /api/user
+# Produção
+GET https://poc-authenticate-api.onrender.com/api/user
+# Local
+GET http://localhost:3000/api/user
+
 Authorization: Bearer <jwt_token>
 ```
 
