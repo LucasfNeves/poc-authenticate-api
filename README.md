@@ -76,7 +76,7 @@ npm run docker:up
 
 ```bash
 
-# acessar o container e executar
+# Rode o comando para executar o container
 npm run docker:exec
 # Dentro do container:
 npm run dev
