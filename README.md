@@ -99,7 +99,7 @@ npm start
 A documentação Swagger está disponível em:
 
 ```
-[http://localhost:3000/api-docs](https://poc-authenticate-api.onrender.com/api/docs/)
+http://localhost:3000/api-docs](https://poc-authenticate-api.onrender.com/api/docs/
 ```
 
 ## Testes
