@@ -99,12 +99,10 @@ npm start
 
 ## Documentação da API
 
-### Acesso Local
-
 A documentação Swagger está disponível em:
 
 ```
-http://localhost:3000/api-docs
+[http://localhost:3000/api-docs](https://poc-authenticate-api.onrender.com/api/docs/)
 ```
 
 ## Testes
@@ -291,8 +289,6 @@ O projeto utiliza GitHub Actions para integração e entrega contínua:
   - Testes unitários e de integração
   - Relatório de cobertura
 - **CD (Continuous Deployment)**: Executa apenas na branch `main`
-  - Build da aplicação
-  - Deploy (configurar conforme necessário)
 
 ## Conventional Commits
 
@@ -306,8 +302,6 @@ Este projeto utiliza [Conventional Commits](https://www.conventionalcommits.org/
 - `chore:` Tarefas gerais
 
 ## Cobertura de Testes
-
-O projeto mantém uma cobertura de testes superior a 75%. Para visualizar o relatório:
 
 ```bash
 npm run test:coverage
