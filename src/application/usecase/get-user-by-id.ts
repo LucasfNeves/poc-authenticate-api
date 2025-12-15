@@ -5,7 +5,6 @@ import { TelephoneType } from '../../shared/utils/types'
 interface GetUserByIdUseCaseResponse {
   user: {
     id: string
-    name: string
     email: string
     telephones: TelephoneType[]
     created_at: string | undefined
@@ -26,7 +25,6 @@ export class GetUserByIdUseCase {
     return {
       user: {
         id: user.id,
-        name: user.name,
         email: user.email,
         telephones: user.telephones || [],
         created_at: user.createdAt,

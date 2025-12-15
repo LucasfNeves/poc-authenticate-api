@@ -23,7 +23,7 @@ describe('GetUserByIdUseCase', () => {
       telephones: [{ number: 987654321, area_code: 11 }],
     })
 
-    return { id: user.id, email, name }
+    return { id: user.id, email }
   }
 
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe('GetUserByIdUseCase', () => {
     getUserByIdUseCase = new GetUserByIdUseCase(usersRepository)
   })
   it('should get user by id successfully', async () => {
-    const { id, email, name } = await createUser()
+    const { id, email } = await createUser()
 
     const result = await getUserByIdUseCase.execute(id)
 
@@ -39,7 +39,9 @@ describe('GetUserByIdUseCase', () => {
       expect.objectContaining({
         id,
         email,
-        name,
+        telephones: expect.any(Array),
+        created_at: expect.any(String),
+        modified_at: expect.any(String),
       })
     )
   })
