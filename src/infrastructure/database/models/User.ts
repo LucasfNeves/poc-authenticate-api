@@ -18,17 +18,14 @@ interface UserAttributes {
 
 type UserCreationAttributes = Optional<UserAttributes, 'id'>
 
-class User
-  extends Model<UserAttributes, UserCreationAttributes>
-  implements UserAttributes
-{
-  public id!: string
-  public name!: string
-  public email!: string
-  public password!: string
-  public telephones!: TelephoneData[]
-  public readonly createdAt!: Date
-  public readonly updatedAt!: Date
+class User extends Model<UserAttributes, UserCreationAttributes> {
+  declare id: string
+  declare name: string
+  declare email: string
+  declare password: string
+  declare telephones: TelephoneData[]
+  declare readonly createdAt: Date
+  declare readonly updatedAt: Date
 }
 
 User.init(

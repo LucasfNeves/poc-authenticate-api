@@ -122,13 +122,6 @@ function middlewareAdapter(middleware) {
 // src/infrastructure/database/models/User.ts
 import { DataTypes, Model } from "sequelize";
 var User = class extends Model {
-  id;
-  name;
-  email;
-  password;
-  telephones;
-  createdAt;
-  updatedAt;
 };
 User.init(
   {
