@@ -728,10 +728,10 @@ var logger = new Logger("Server");
 var app = express();
 app.use(express.json());
 app.use(cors());
-app.use((req, _res, next) => {
+app.use((_req, _res, next) => {
   next();
 });
-app.get("/", (req, res) => res.status(200).json({ status: "API is healthy" }));
+app.get("/", (_req, res) => res.status(200).json({ status: "API is healthy" }));
 var swaggerPath = path.resolve(__dirname, "../docs/swagger.json");
 var swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, "utf-8"));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -744,16 +744,24 @@ async function bootstrap() {
     logger.info("Conex\xE3o com banco de dados estabelecida");
     await database_default.sync({ alter: true });
     logger.info("Models sincronizados");
-    app.listen(port, () => {
-      logger.info(`Servidor rodando na porta ${port}`);
-    });
+    if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+      app.listen(port, () => {
+        logger.info(`Servidor rodando na porta ${port}`);
+      });
+    }
   } catch (error) {
     logger.error("Falha ao iniciar aplica\xE7\xE3o", error);
     if (error instanceof Error) {
       logger.error(`Detalhes: ${error.message}`);
       console.error(error.stack);
     }
-    process.exit(1);
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
   }
 }
 bootstrap();
+var index_default = app;
+export {
+  index_default as default
+};
