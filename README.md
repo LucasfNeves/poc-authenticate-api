@@ -11,7 +11,6 @@ API RESTful de autenticação desenvolvida com Node.js, Express, TypeScript e Po
 - **Sequelize** - ORM
 - **JWT** - Autenticação
 - **Bcrypt** - Hash de senhas
-- **Zod** - Validação de schemas
 - **Jest** - Testes unitários e de integração
 - **Winston** - Logger
 - **Docker** - Containerização
@@ -76,10 +75,8 @@ npm run docker:up
 ### 5. Execute o projeto
 
 ```bash
-# Executar localmente
-npm run dev
 
-# OU acessar o container e executar
+# Rode o comando para executar o container
 npm run docker:exec
 # Dentro do container:
 npm run dev
@@ -110,9 +107,6 @@ A API está hospedada no **Render** e disponível em:
 ## Documentação da API
 
 A documentação Swagger está disponível em:
-
-- **Produção**: `https://poc-authenticate-api.onrender.com/api/docs/`
-- **Local**: `http://localhost:3000/api-docs`
 
 ## Testes
 
